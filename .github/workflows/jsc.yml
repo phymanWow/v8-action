@@ -51,12 +51,9 @@ jobs:
     # 7zip WebKit src
     - name: zip WebKit_src
       run: |
-        zip -q -r WebKit.zip WebKit
+        zip -q -r WebKit ｜ 7z a WebKit.7z -v2048m
         rm -rf ./WebKit
         
-    - name: 7zip WebKit_src
-      run: |
-        7z a WebKit.7z ./WebKit.zip -v2048m
     
    
     # upload WebKit.zip to wenshushu
