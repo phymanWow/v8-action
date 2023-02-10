@@ -40,6 +40,10 @@ jobs:
     - name: fetch webkit
       run: |
         git clone https://github.com/WebKit/WebKit.git
+        
+    # fetch webkit source code
+    - name: checkout webkit
+      run: |
         cd WebKit
         git checkout $COMMIT
         cd ..
@@ -52,7 +56,7 @@ jobs:
     
    
     # upload WebKit.zip to wenshushu
-    - name: upload Webkit_src
+    - name: upload WebKit_src
       if: env.SRC_UPLOAD == 'true' && !cancelled()
       run: |
         curl -fsSL git.io/file-transfer | sh
