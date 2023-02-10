@@ -1,0 +1,62 @@
+#===================================================
+# Description: Build v8 enginer using GitHub Actions
+# Author: t1an5t
+#===================================================
+
+
+name: BUILD jsc
+
+on:
+  push:
+    branches: [ master ]
+  watch:
+    types: started
+
+env:
+  PATCH_FLAG: true
+  COMMIT: 645b9044d2369e3b083b171da517a2440bb4fa18
+  DEPOT_UPLOAD: true
+  SRC_UPLOAD: true
+  BINARY_UPLOAD: false
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-20.04
+    if: github.event.repository.owner.id == github.event.sender.id 	
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+      
+    # init ubuntu environment
+    - name: init env
+      run: |
+        sudo apt-get update
+        sudo apt-get -y install pkg-config git subversion curl wget build-essential python xz-utils zip p7zip-full
+    
+    # fetch webkit source code
+    - name: fetch webkit
+      run: |
+        git clone https://github.com/WebKit/WebKit.git
+        cd WebKit
+        git checkout $COMMIT
+        cd ..
+        
+    # 7zip WebKit src
+    - name: 7zip WebKit_src
+      run: |
+        zip -q -r WebKit.zip WebKit
+        7z a WebKit.7z ./WebKit.zip -v2048m
+    
+   
+    # upload WebKit.zip to wenshushu
+    - name: upload Webkit_src
+      if: env.SRC_UPLOAD == 'true' && !cancelled()
+      run: |
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer wss --block 2621440 -s -p 64 --no-progress WebKit.7z.001 2>&1 | tee wss.log
+        echo "::warning file=wenshushu.cn::$(cat wss.log | grep https)"
+        ./transfer wss --block 2621440 -s -p 64 --no-progress WebKit.7z.002 2>&1 | tee wss.log
+        echo "::warning file=wenshushu.cn::$(cat wss.log | grep https)"
