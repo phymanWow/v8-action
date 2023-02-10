@@ -51,11 +51,11 @@ jobs:
     # zip WebKit src
     - name: zip WebKit_src
       run: |
-        zip -q -r WebKit WebKit.zip
+        zip -q -r WebKit.zip WebKit
         rm -rf ./WebKit
         
     # 7zip WebKit src
-    - name: zip WebKit_src
+    - name: 7z WebKit_src
       run: |
         7z a WebKit.7z ./WebKit.zip -v2048m
    
