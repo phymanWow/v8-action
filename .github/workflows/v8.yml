@@ -7,10 +7,10 @@
 name: BUILD v8
 
 on:
-  push:
-    branches: [ master ]
-  watch:
-    types: started
+  #push:
+  #  branches: [ master ]
+  #watch:
+  #  types: started
 
 env:
   PATCH_FLAG: true
